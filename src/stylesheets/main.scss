@@ -1,6 +1,36 @@
-// Your styles go here
+//Variables
+$button-color: #0d6efd;
+$white: #fff;
+$text-muted: rgba(255, 255, 255, .4);
+$background: #202020;
+$border-color1: rgba(0, 0, 0, .1);
+$border-color2: #303030;
+$footer: #333;
+$width: 100%;
+$button-padding: 0.5em 1.5em;
+$button-radius: 6px;
+
+/* sass:math is for the make-column mixin*/
+@use "sass:math";
+@use "nav.scss";
+
+@mixin border{
+  border-top: 1px solid;
+}
+
+@mixin list-style{
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@mixin make-column($width){
+  width: math.percentage(math.div($width, 12));
+}
+
+//styles
 body {
-  background: #202020 url('/images/footer-bg.jpg') repeat;
+  background: $background url('/images/footer-bg.jpg') repeat;
   min-width: 1200px;
   margin: 0;
   padding: 0;
@@ -25,16 +55,11 @@ h6 {
   letter-spacing: 1px;
   text-transform: uppercase;
   font-weight: 300;
-}
 
-h1 a,
-h2 a,
-h3 a,
-h4 a,
-h5 a,
-h6 a {
-  color: inherit;
-  text-decoration: none;
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 }
 
 strong,
@@ -49,7 +74,7 @@ i {
 }
 
 a {
-  color: #0d6efd;
+  color: $button-color;
 }
 
 sub {
@@ -64,9 +89,12 @@ sup {
   font-size: 0.8em;
 }
 
+/*hr styles
+use border mixin*/
 hr {
   border: 0;
-  border-top: solid 1px #ddd;
+  @include border;
+  border-color: #ddd;
 }
 
 p,
@@ -77,36 +105,35 @@ table {
   margin-bottom: 1em;
 }
 
+//header styles
 header {
   margin-bottom: 2em;
   line-height: 1.7em;
-}
 
-header h2 {
-  font-size: 2.5em;
-}
+  h2 {
+    font-size: 2.5em;
+  }
 
-header .byline {
-  display: block;
-  margin: 0.5em 0 0 0;
-  padding: 0 0 0.5em 0;
-  text-transform: uppercase;
-  font-size: 1.4em;
+  .byline {
+    display: block;
+    margin: 0.5em 0 0 0;
+    padding: 0 0 0.5em 0;
+    text-transform: uppercase;
+    font-size: 1.4em;
+  }
 }
 
 section,
 article {
   margin-bottom: 3em;
-}
 
-section > :last-child,
-article > :last-child {
-  margin-bottom: 0;
-}
+  > :last-child {
+    margin-bottom: 0;
+  }
 
-section:last-child,
-article:last-child {
-  margin-bottom: 0;
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 blockquote {
@@ -124,296 +151,218 @@ footer {
   width: 1200px;
   margin-left: auto;
   margin-right: auto;
-}
 
-.container.small {
-  width: 900px;
-}
+  &.small {
+    width: 900px;
+  }
 
-.container.big {
-  width: 100%;
-  max-width: 1500px;
-  min-width: 1200px;
-}
-
-.row section,
-.row article {
-  margin-bottom: 0;
-}
-
-.row [class*='column-'] {
-  padding: 50px 0 0 50px;
-  float: left;
-  box-sizing: border-box;
+  &.big {
+    width: $width;
+    max-width: 1500px;
+    min-width: 1200px;
+  }
 }
 
 .row {
   margin-left: -50px;
+
+  section,
+  article {
+    margin-bottom: 0;
+  }
+
+  &:after {
+    content: '';
+    display: block;
+    clear: both;
+    height: 0;
+  }
+
+  [class*='column-'] {
+    padding: 50px 0 0 50px;
+    float: left;
+    box-sizing: border-box;
+  }
 }
 
-.row:after {
-  content: '';
-  display: block;
-  clear: both;
-  height: 0;
-}
-
-.column-1,
-.column-2,
-.column-3,
-.column-4,
-.column-5,
-.column-6,
-.column-7.column-8,
-.column-9,
-.column-10,
-.column-11,
-.column-12 {
-  width: 100%;
+/*make column for 1 to 12
+use make-column mixin*/
+@for $i from 1 through 12 {
+  .column-#{$i} {
+    width: $width;
+  }
 }
 
 @media all and (min-width: 576px) {
-  .column-1 {
-    width: 8.33333%;
-  }
-
-  .column-2 {
-    width: 16.66667%;
-  }
-
-  .column-3 {
-    width: 25%;
-  }
-
-  .column-4 {
-    width: 33.33333%;
-  }
-
-  .column-5 {
-    width: 41.66667%;
-  }
-
-  .column-6 {
-    width: 50%;
-  }
-
-  .column-7 {
-    width: 58.33333%;
-  }
-
-  .column-8 {
-    width: 66.66667%;
-  }
-
-  .column-9 {
-    width: 75%;
-  }
-
-  .column-10 {
-    width: 83.33333%;
-  }
-
-  .column-11 {
-    width: 91.66667%;
-  }
-
-  .column-12 {
-    width: 100%;
+  @for $i from 1 through 12 {
+    .column-#{$i} {
+      @include make-column($i);
+    }
   }
 }
 
+//nested image style
 .image {
   display: inline-block;
+
+  &.featured {
+    display: block;
+    width: $width;
+    margin: 0 0 2em 0;
+  }
+
+  &.full {
+    display: block;
+    width: $width;
+    margin-bottom: 2em;
+  }
+
+  &.left {
+    float: left;
+    margin: 0 2em 2em 0;
+  }
+
+  &.centered {
+    display: block;
+    margin: 0 0 2em 0;
+
+    img {
+      margin: 0 auto;
+      width: auto;
+    }
+  }
+
+  img {
+    display: block;
+    width: $width;
+  }
 }
 
-.image img {
-  display: block;
-  width: 100%;
-}
-
-.image.featured {
-  display: block;
-  width: 100%;
-  margin: 0 0 2em 0;
-}
-
-.image.full {
-  display: block;
-  width: 100%;
-  margin-bottom: 2em;
-}
-
-.image.left {
-  float: left;
-  margin: 0 2em 2em 0;
-}
-
-.image.centered {
-  display: block;
-  margin: 0 0 2em 0;
-}
-
-.image.centered img {
-  margin: 0 auto;
-  width: auto;
-}
-
+//unlisted list
 ul.default {
   margin: 0;
   padding: 0;
   list-style: none;
+
+  a {
+    text-decoration: none;
+    color: rgba(255, 255, 255, .5);
+
+  &:hover {
+    text-decoration: underline;
+  }
+  }
 }
 
-ul.default li {
-  display: block;
-  padding: 2em 0em 1.25em 0em;
-  border-top: 1px solid #303030;
-}
-
-ul.default li:first-child {
-  padding-top: 0em;
-  border-top: none;
-}
-
-ul.default a {
-  text-decoration: none;
-  color: rgba(255, 255, 255, .5);
-}
-
-ul.default a:hover {
-  text-decoration: underline;
-}
-
+/*unlisted list with style 1
+use list-style mixin and border mixin*/
 ul.style1 {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  @include list-style;
+
+  li {
+    padding: 0.60em 0em;
+    @include border;
+    border-color: $border-color1;
+
+    &:first-child {
+      padding-top: 0;
+      border-top: 0;
+    }
+  }
 }
 
-ul.style1 li {
-  padding: 0.60em 0em;
-  border-top: 1px solid;
-  border-color: rgba(0, 0, 0, .1);
-}
-
-ul.style1 li:first-child {
-  padding-top: 0;
-  border-top: 0;
-}
-
+/*unlisted list with style 2
+use list-style mixin and border mixin*/
 ul.style2 {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  @include list-style;
+
+  li {
+    padding: 1.90em 0em 1.60em 0em;
+    @include border;
+    border-color: $border-color1;
+
+    &:first-child {
+      padding-top: 0;
+      border-top: 0;
+    }
+  }
+
+  img {
+    float: left;
+    padding-right: 1em;
+  }
 }
 
-ul.style2 li {
-  padding: 1.90em 0em 1.60em 0em;
-  border-top: 1px solid;
-  border-color: rgba(0, 0, 0, .1);
-}
-
-ul.style2 li:first-child {
-  padding-top: 0;
-  border-top: 0;
-}
-
-ul.style2 img {
-  float: left;
-  padding-right: 1em;
-}
-
+//unlisted list with style5
 ul.style5 {
   overflow: hidden;
   margin: 0em 0em 1em 0em;
   padding: 0em;
   list-style: none;
+
+  li {
+    float: left;
+    padding: 0.25em 0.25em;
+    line-height: 0;
+  }
 }
 
-ul.style5 li {
-  float: left;
-  padding: 0.25em 0.25em;
-  line-height: 0;
+/*list styles
+use border mixin*/
+li {
+  display: block;
+  padding: 2em 0em 1.25em 0em;
+  @include border;
+  border-color: $border-color2;
+
+  &:first-child {
+    padding-top: 0em;
+    border-top: none;
+  }
 }
 
+//button styles
 .button {
   position: relative;
   display: inline-block;
   margin-top: 0.5em;
-  padding: 0.50em 1.5em;
-  background: #0d6efd;
-  border-radius: 6px;
+  padding: $button-padding;
+  background: $button-color;
+  border-radius: $button-radius;
   text-decoration: none;
   text-transform: uppercase;
   font-size: 1.1em;
-  color: #FFF;
+  color: $white;
   transition: color 0.35s ease-in-out, background-color 0.35s ease-in-out;
   cursor: pointer;
-}
 
-.button:hover {
-  background: #0d6efd;
-  color: #FFF !important;
+  &:hover {
+    background: $button-color;
+    color: $white !important;
+  }
 }
 
 .header {
   position: relative;
-  background: #FFF;
-}
+  background: $white;
 
-.header .container {
-  position: relative;
-  padding: 4em 0em;
+  .container {
+    position: relative;
+    padding: 4em 0em;
+  }
 }
 
 .logo {
   position: absolute;
   left: 0em;
   top: 3em;
-}
 
-.logo a {
-  display: block;
-  text-decoration: none;
-  font-size: 2.8em;
-  font-weight: 600;
-}
-
-.nav {
-  position: absolute;
-  right: 0em;
-  top: 2.2em;
-}
-
-.nav ul {
-  list-style-type: none;
-}
-
-.nav ul li {
-  float: left;
-}
-
-.nav ul li:last-child {
-  padding-right: 0;
-}
-
-.nav ul li a,
-.nav ul li span {
-  display: block;
-  margin-left: 0.7em;
-  padding: 0.80em 1.2em;
-  letter-spacing: 0.06em;
-  text-decoration: none;
-  text-transform: uppercase;
-  font-size: 1.1em;
-  outline: 0;
-  color: #333;
-}
-
-.nav li.active a {
-  background: #0d6efd;
-  border-radius: 5px;
-  color: #FFF;
+  a {
+    display: block;
+    text-decoration: none;
+    font-size: 2.8em;
+    font-weight: 600;
+  }
 }
 
 .banner {
@@ -421,16 +370,18 @@ ul.style5 li {
   padding: 12em 0em;
   background: url('/images/banner.jpg') no-repeat center;
   background-size: cover;
-  color: #fff;
+  color: $white;
 }
 
 .page {
   position: relative;
-  background: #fff;
+  background: $white;
 }
 
+/*main class styles
+use border mixin*/
 .main {
-  border-top: 1px solid;
+  @include border;
   border-color: rgba(0, 0, 0, .2);
 }
 
@@ -438,56 +389,60 @@ ul.style5 li {
   font-size: 1.6em;
 }
 
+//footer styles
 .footer {
   position: relative;
-  color: rgba(255, 255, 255, .4);
+  color: $text-muted;
+
+  h2 {
+    padding-bottom: 1.5em;
+    font-size: 1.6em;
+    color: $white;
+  }
+
+  strong {
+    color: rgba(255, 255, 255, .7);
+  }
 }
 
-.footer h2 {
-  padding-bottom: 1.5em;
-  font-size: 1.6em;
-  color: #FFF;
-}
-
-.footer strong {
-  color: rgba(255, 255, 255, .7);
-}
-
+/*copywriter class styles
+use border mixin*/
 .copyright {
   position: relative;
   padding: 3em 0em;
-  border-top: 1px solid #303030;
+  @include border;
+  border-color: $border-color2;
   letter-spacing: 1px;
   text-align: center;
-  color: rgba(255, 255, 255, .4);
-}
+  color: $text-muted;
 
-.copyright a {
-  text-decoration: none;
-  color: rgba(255, 255, 255, .4) !important;
+  a {
+    text-decoration: none;
+    color: $text-muted !important;
+  }
 }
 
 .marketing {
   position: relative;
-}
 
-.marketing header h2 {
-  font-size: 1.6em;
+  header h2 {
+    font-size: 1.6em;
+  }
 }
 
 .featured {
   position: relative;
-}
 
-.featured .divider {
-  border-bottom: 1px solid #303030;
-}
+  .divider {
+    border-bottom: 1px solid $border-color2;
+  }
 
-.featured .box {
-  background: #FFF;
-  padding: 1.4em;
-  font-size: 0.95em;
-  border-radius: 5px;
+  .box {
+    background: $white;
+    padding: 1.4em;
+    font-size: 0.95em;
+    border-radius: 5px;
+  }
 }
 
 .balloon {
@@ -496,13 +451,13 @@ ul.style5 li {
   border-radius: 5px;
   line-height: 180%;
   font-size: 1.2em;
-  color: #333;
+  color: $footer;
+
+  strong {
+    color: $footer !important;
+  }
 }
 
 .ballon-bgbtm {
   height: 1.87em;
-}
-
-.balloon strong {
-  color: #333 !important;
 }
